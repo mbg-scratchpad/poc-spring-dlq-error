@@ -3,6 +3,8 @@ package com.example.demo;
 import com.rabbitmq.client.LongString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,11 @@ public class MessagingErrorHandler {
 
     private static final Logger log = LoggerFactory.getLogger( MessagingErrorHandler.class );
 
-    @ServiceActivator(inputChannel = ERRORS)
-    public void handlerForErrors( Message<?> failedMessage ) {
+    @StreamListener(ERRORS)
+    public void handlerForErrors( Message<DemoInfo> failedMessage ) {
 
         System.out.println( "Failed message: " + failedMessage );
-        DemoInfo failedMessagePayload =(DemoInfo) failedMessage.getPayload();
+        DemoInfo failedMessagePayload = failedMessage.getPayload();
 
         log.info( "*** demo: [{}]",failedMessagePayload.getName() );
 
